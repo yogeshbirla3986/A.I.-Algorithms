@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[12]:
+# In[28]:
 
 
 import numpy as np
@@ -71,8 +71,8 @@ class Board:
                 
                 if currState.mat[i][j] != self.goalMat[i][j]:
                     return(False)
-        return(True)
-    
+        return(True)    
+        
     def ShowResult(self):
         self.mat = self.original
         
@@ -107,14 +107,15 @@ class Board:
                     print(self.mat[i][j],end = " ")
                 print()
             print()
+        print("Congratulations solution found ... ")
                     
         
     def DLS(self,maxDepth): 
-  
+        
         if self.isGoal(currState): return True
 
         if maxDepth <= 0 : return False
-
+            
         if self.blanki > 0:  #Top move
                 self.moveTop()
                 if(self.DLS(maxDepth-1)):
@@ -153,7 +154,13 @@ class Board:
         
         if self.isValidInput() == False:
             print("Input is not valid ...")
-            return(False)
+            return False
+        
+        if self.isSolvable() == False:
+            print("no solution possible for this config ...")
+            return False
+        else:
+            print("given problem is solvable")
         
         for i in range(maxDepth): 
             if (self.DLS(i)): 
@@ -172,10 +179,25 @@ class Board:
                     return(False)
         return(True)
     
+    def isSolvable(self):
+        
+        noInversions = 0
+        temp = np.copy(self.mat)
+        temp = np.resize(temp, (9))
+        
+        for i in range(9):
+            for j in range(i+1,9):
+                
+                if int(temp[j]) != 0 and int(temp[i]) != 0 and int(temp[j]) < int(temp[i]):
+                    noInversions += 1
+                    
+        print("number of inversion's : ",noInversions)
+        # N here is 3, odd value so that problem is solvable if inversions is even
+        return noInversions%2 == 0
     
 
 
-# In[13]:
+# In[29]:
 
 
 currState = Board()
@@ -192,4 +214,8 @@ else:
 1 2 3
 5 6 0
 7 8 4
+
+1 8 2
+0 4 3
+7 6 5
 
