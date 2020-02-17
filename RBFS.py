@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[25]:
+# In[1]:
 
 
 import numpy as np
@@ -169,6 +169,22 @@ class Board:
                     print("-----------------End of Astar-----------------")
 
                     
+    def isSolvable(self):
+        
+        noInversions = 0
+        temp = np.copy(self.mat)
+        temp = np.resize(temp, (9))
+        
+        for i in range(9):
+            for j in range(i+1,9):
+                
+                if int(temp[j]) != 0 and int(temp[i]) != 0 and int(temp[j]) < int(temp[i]):
+                    noInversions += 1
+                    
+        print("number of inversion's : ",noInversions)
+        # N here is 3, odd value so that problem is solvable if inversions is even
+        return noInversions%2 == 0
+    
     def isGoal(self,mat):
         for i in range(3):
             for j in range(3):
@@ -253,8 +269,8 @@ class Board:
                 
                 if tempFVal < queueFVal :
                     
-                    AstarOpenQueue.gVal = temp.gVal
-                    AstarOpenQueue.hVal = temp.hVal
+                    AstarOpenQueue[i].gVal = np.copy(temp.gVal)
+                    AstarOpenQueue[i].hVal = np.copy(temp.hVal)
                     print("This configuration is found in Opend list , minimized Value to",[queueFVal,tempFVal])
                     
                 else:
@@ -339,6 +355,9 @@ class Board:
         if self.isValidInput() == False:
             print("Input is not valid ...")
             return(False)
+        elif self.isSolvable() == False:
+            print("this config is not solvable .")
+            return(False)
         else:
             return self.RBFS(maxDepth,0)
 
@@ -356,7 +375,7 @@ class Board:
     
 
 
-# In[26]:
+# In[2]:
 
 
 class Node():
@@ -414,12 +433,12 @@ class Node():
         self.blanki += 1   
 
 
-# In[30]:
+# In[3]:
 
 
 currState = Board()
 
-if(currState.gettingStarted(1000)):
+if(currState.gettingStarted(2000)):
     print("Congatulations solution found ... ")
 else:
     print("No solution found ...")
@@ -431,6 +450,14 @@ else:
 1 2 3
 5 6 0
 7 8 4
+
+8 7 6
+5 4 3
+2 1 0
+
+1 8 2
+0 4 3
+7 6 5
 
 
 # In[ ]:
